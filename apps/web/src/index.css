@@ -1,0 +1,85 @@
+@import "tailwindcss";
+
+@theme {
+  --font-display: 'Outfit', sans-serif;
+  --font-sans: 'Outfit', sans-serif;
+  --font-mono: 'Outfit', monospace;
+}
+
+body {
+  font-family: 'Outfit', sans-serif;
+  background-color: #0d0d0d;
+  color: #f5f5f7;
+  overflow-x: hidden;
+}
+
+.font-display {
+  font-family: 'Outfit', sans-serif;
+}
+
+.font-sans {
+  font-family: 'Outfit', sans-serif;
+}
+
+button {
+  text-transform: none;
+}
+
+/* Custom subtle scrollbar */
+::-webkit-scrollbar {
+  width: 4px;
+  height: 4px;
+}
+::-webkit-scrollbar-track {
+  background: #0d0d0d;
+}
+::-webkit-scrollbar-thumb {
+  background: rgba(255, 255, 255, 0.1);
+  border-radius: 2px;
+}
+::-webkit-scrollbar-thumb:hover {
+  background: rgba(255, 255, 255, 0.2);
+}
+
+/* Cinematic Architectural Showreel Camera Motions */
+@keyframes archGlideZoom {
+  0% {
+    transform: scale(1.0) translate3d(0, 0, 0);
+  }
+  100% {
+    transform: scale(1.14) translate3d(-1%, -1.5%, 0);
+  }
+}
+
+@keyframes archPanDrift {
+  0% {
+    transform: scale(1.1) translate3d(1.5%, 0.5%, 0);
+  }
+  100% {
+    transform: scale(1.02) translate3d(-1.5%, -1%, 0);
+  }
+}
+
+@keyframes lightSweep {
+  0% {
+    transform: translateX(-100%) skewX(-12deg);
+  }
+  50% {
+    transform: translateX(10%) skewX(-12deg);
+  }
+  100% {
+    transform: translateX(120%) skewX(-12deg);
+  }
+}
+
+.animate-arch-glide-zoom {
+  animation: archGlideZoom 8.2s cubic-bezier(0.25, 1, 0.5, 1) forwards;
+}
+
+.animate-arch-pan-drift {
+  animation: archPanDrift 8.2s cubic-bezier(0.25, 1, 0.5, 1) forwards;
+}
+
+.animate-light-sweep {
+  animation: lightSweep 14s ease-in-out infinite;
+}

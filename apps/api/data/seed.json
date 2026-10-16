@@ -1,0 +1,335 @@
+{
+  "projects": [
+    {
+      "id": "still-vmx-boogie",
+      "category": "still-images",
+      "title": "Boogie Woogie Urban Quarters",
+      "architect": "VMX Architects",
+      "location": "Amsterdam, Netherlands",
+      "year": "2026",
+      "image": "/assets/arch_modular_apartments_1791047740832.jpg",
+      "description": "A vibrant residential masterplan interweaving textured brick facades, tree-lined pedestrian avenues, and crisp contemporary towers."
+    },
+    {
+      "id": "still-taipei-skyline",
+      "category": "still-images",
+      "title": "Metropolitan Twilight Tower",
+      "architect": "Foster + Partners",
+      "location": "Taipei, Taiwan",
+      "year": "2026",
+      "image": "/assets/arch_glass_tower_1791046631981.jpg",
+      "description": "Atmospheric twilight cityscape capturing the interplay between the glowing urban artery, monolithic towers, and misty mountain backdrop."
+    },
+    {
+      "id": "still-terminal-canopy",
+      "category": "still-images",
+      "title": "High-Speed Railway Terminal Canopy",
+      "architect": "Zaha Hadid Architects",
+      "location": "Chengdu, China",
+      "year": "2026",
+      "image": "https://images.unsplash.com/photo-1513694203232-719a280e022f?auto=format&fit=crop&w=2200&q=85",
+      "description": "Sculptural branching timber-copper canopy spanning the active railway concourse, diffusing natural northern skylight across passenger platforms."
+    },
+    {
+      "id": "still-courtyard-terrace",
+      "category": "still-images",
+      "title": "Terraced Woodland School & Residences",
+      "architect": "Snøhetta & COBE",
+      "location": "Oslo, Norway",
+      "year": "2025",
+      "image": "https://images.unsplash.com/photo-1600585154340-be6161a56a0c?auto=format&fit=crop&w=2000&q=85",
+      "description": "Stepped bio-diverse rooftop gardens connecting down to a central community courtyard featuring preserved pines and play slides."
+    },
+    {
+      "id": "still-nordic-cantilever",
+      "category": "still-images",
+      "title": "Nordic Basalt Cantilever Villa",
+      "architect": "Snøhetta Studio",
+      "location": "Vestland, Norway",
+      "year": "2026",
+      "image": "/assets/arch_hero_nordic_1791042685381.jpg",
+      "description": "Monolithic dark basalt slabs projecting outward over mirror-smooth fjord waters during morning sea mist."
+    },
+    {
+      "id": "still-manhattan-penthouse",
+      "category": "still-images",
+      "title": "Manhattan Sky Salon Penthouse",
+      "architect": "Studio Liaigre",
+      "location": "Tribeca, New York",
+      "year": "2025",
+      "image": "/assets/arch_interior_loft_1791042707674.jpg",
+      "description": "Double-height private living space framing the Manhattan skyline with fluted nero marquina hearth and bespoke oiled timber joinery."
+    },
+    {
+      "id": "still-amangiri-sanctuary",
+      "category": "still-images",
+      "title": "Amangiri Basalt Sanctuary",
+      "architect": "Rick Joy Architects",
+      "location": "Canyon Point, Utah",
+      "year": "2025",
+      "image": "/assets/arch_desert_villa_1791046593942.jpg",
+      "description": "Earthy textured concrete pavilion embedded seamlessly into the desert sandstone plateau at golden hour."
+    },
+    {
+      "id": "still-timber-pavilion",
+      "category": "still-images",
+      "title": "Arashiyama Water Pavilion",
+      "architect": "Kengo Kuma & Associates",
+      "location": "Kyoto, Japan",
+      "year": "2026",
+      "image": "/assets/arch_kyoto_sanctuary_1791042718246.jpg",
+      "description": "Delicate charred cedar louvers and dark granite reflection pools shrouded in ambient morning mist."
+    },
+    {
+      "id": "still-monolith-art",
+      "category": "still-images",
+      "title": "Monolith Museum of Contemporary Art",
+      "architect": "Tadao Ando",
+      "location": "Lugano, Switzerland",
+      "year": "2026",
+      "image": "/assets/arch_monolith_museum_1791042697346.jpg",
+      "description": "Smooth cast concrete volumes framing natural light portals and reflecting pools."
+    },
+    {
+      "id": "still-alpine-retreat",
+      "category": "still-images",
+      "title": "Alpine High-Altitude Chalet",
+      "architect": "Peter Zumthor",
+      "location": "St. Moritz, Switzerland",
+      "year": "2025",
+      "image": "/assets/arch_alpine_chalet_1791046619292.jpg",
+      "description": "Massive local gneiss stone walls with panoramic thermal glass gazing upon the Engadin valley."
+    },
+    {
+      "id": "anim-coastal-sunset",
+      "category": "animations",
+      "title": "Coastal Sunset Infinity Terrace Film",
+      "architect": "Tadao Ando Architect",
+      "location": "Ticino, Switzerland",
+      "year": "2026",
+      "badge": "Film",
+      "image": "/assets/arch_coastal_pool_1791047725968.jpg",
+      "description": "Cinematic drone choreography sweeping from the alpine slopes across the infinity pool edge at golden hour."
+    },
+    {
+      "id": "anim-monolith-motion",
+      "category": "animations",
+      "title": "Monolith Solar Pavilion Walkthrough",
+      "architect": "Tadao Ando Studio",
+      "location": "Lugano, Switzerland",
+      "year": "2026",
+      "badge": "Film",
+      "image": "/assets/arch_monolith_museum_1791042697346.jpg",
+      "description": "Continuous movement exploring the shadow shifts across curved travertine walls throughout a single day."
+    },
+    {
+      "id": "anim-alpine-chalet",
+      "category": "animations",
+      "title": "Alpine Chalet Twilight Motion",
+      "architect": "Peter Zumthor Studio",
+      "location": "St. Moritz, Switzerland",
+      "year": "2026",
+      "badge": "Film",
+      "image": "/assets/arch_alpine_chalet_1791046619292.jpg",
+      "description": "Gentle snowfall simulation with interior hearth fireglow illuminating floor-to-ceiling panoramic glass."
+    },
+    {
+      "id": "anim-botanical-spire",
+      "category": "animations",
+      "title": "Madison Botanical Spire Flythrough",
+      "architect": "Foster + Partners",
+      "location": "Manhattan, New York",
+      "year": "2025",
+      "badge": "Film",
+      "image": "/assets/arch_glass_tower_1791046631981.jpg",
+      "description": "Dramatic vertical camera rise along the crystalline facade, piercing through early morning cloud layers."
+    },
+    {
+      "id": "anim-desert-villa",
+      "category": "animations",
+      "title": "Dusk Villa Poolside Journey",
+      "architect": "Rick Joy Studio",
+      "location": "Palm Springs, California",
+      "year": "2026",
+      "badge": "Film",
+      "image": "/assets/arch_desert_villa_1791046593942.jpg",
+      "description": "Transition from sunset amber to deep blue twilight with synchronized architectural lighting sequences."
+    },
+    {
+      "id": "anim-modular-living",
+      "category": "animations",
+      "title": "Canalside Quarter Architectural Short",
+      "architect": "VMX Architects",
+      "location": "Amsterdam, Netherlands",
+      "year": "2026",
+      "badge": "Film",
+      "image": "/assets/arch_modular_apartments_1791047740832.jpg",
+      "description": "Atmospheric motion piece capturing pedestrian movement and changing natural light across timber facades."
+    },
+    {
+      "id": "vr-kunsthalle-twin",
+      "category": "vr",
+      "title": "Kunsthalle Virtual Reality Twin",
+      "architect": "Herzog & de Meuron",
+      "location": "Basel, Switzerland",
+      "year": "2026",
+      "badge": "VR",
+      "image": "/assets/arch_spiral_gallery_1791046607463.jpg",
+      "description": "Complete real-time spatial digital twin enabling freeform spatial navigation and acoustic audio simulation."
+    },
+    {
+      "id": "vr-botanical-penthouse",
+      "category": "vr",
+      "title": "Botanical Penthouse Real-Time Twin",
+      "architect": "Foster + Partners",
+      "location": "Tribeca, New York",
+      "year": "2026",
+      "badge": "VR",
+      "image": "/assets/arch_interior_loft_1791042707674.jpg",
+      "description": "Interactive material customization portal allowing clients to swap marble varieties, wood finishes, and lighting fixtures live."
+    },
+    {
+      "id": "vr-nordic-nanite",
+      "category": "vr",
+      "title": "Nordic Basalt Digital Twin",
+      "architect": "Design Forge Labs",
+      "location": "Vestland, Norway",
+      "year": "2026",
+      "badge": "VR",
+      "image": "/assets/arch_hero_nordic_1791042685381.jpg",
+      "description": "High-fidelity spatial twin with realistic water caustics and interactive ambient daylight."
+    },
+    {
+      "id": "vr-modular-complex",
+      "category": "vr",
+      "title": "Timber Modular Living Simulator",
+      "architect": "Lund Hagem Arkitekter",
+      "location": "Copenhagen, Denmark",
+      "year": "2025",
+      "badge": "VR",
+      "image": "/assets/arch_modular_apartments_1791047740832.jpg",
+      "description": "Modular unit configuration app: walk through floorplans, configure balcony layouts, and assess solar exposure."
+    },
+    {
+      "id": "pano-rooftop-horizon",
+      "category": "360-panoramas",
+      "title": "Rooftop Horizon 360° Panoramic Tour",
+      "architect": "Rick Joy Architects",
+      "location": "Canyon Point, Utah",
+      "year": "2026",
+      "badge": "360°",
+      "image": "/assets/arch_rooftop_panoramic_1791047753250.jpg",
+      "description": "Spherical panoramic capture positioned at the cantilevered edge of the rooftop lounge overlooking the desert expanse."
+    },
+    {
+      "id": "pano-arashiyama-water",
+      "category": "360-panoramas",
+      "title": "Arashiyama Water Pavilion 360°",
+      "architect": "Kengo Kuma & Associates",
+      "location": "Kyoto, Japan",
+      "year": "2026",
+      "badge": "360°",
+      "image": "/assets/arch_kyoto_sanctuary_1791042718246.jpg",
+      "description": "Immersive viewpoint hovering directly above the dark reflecting pond surrounded by bamboo groves."
+    },
+    {
+      "id": "pano-manhattan-skyline",
+      "category": "360-panoramas",
+      "title": "Tribeca High-Rise 360° Balcony",
+      "architect": "Studio Liaigre",
+      "location": "Tribeca, New York",
+      "year": "2025",
+      "badge": "360°",
+      "image": "/assets/arch_interior_loft_1791042707674.jpg",
+      "description": "Seamless horizon panorama connecting the interior living room out to the wraparound terrace overlooking Lower Manhattan."
+    },
+    {
+      "id": "pano-coastal-villa",
+      "category": "360-panoramas",
+      "title": "Lugano Lakeside 360° Vantage",
+      "architect": "Tadao Ando Architect",
+      "location": "Lugano, Switzerland",
+      "year": "2026",
+      "badge": "360°",
+      "image": "/assets/arch_coastal_pool_1791047725968.jpg",
+      "description": "Unobstructed twilight perspective floating between the glass living volume and the lake water horizon."
+    }
+  ],
+  "clients": [
+    {
+      "id": "altura",
+      "name": "ALTURA",
+      "subtitle": "DEVELOPMENTS"
+    },
+    {
+      "id": "nova",
+      "name": "NOVA",
+      "subtitle": "ARCHITECTS"
+    },
+    {
+      "id": "atlas",
+      "name": "ATLAS",
+      "subtitle": "URBAN"
+    },
+    {
+      "id": "forma",
+      "name": "FORMA",
+      "subtitle": "STUDIO"
+    },
+    {
+      "id": "lumiere",
+      "name": "LUMIÈRE",
+      "subtitle": "DESIGN"
+    },
+    {
+      "id": "harbor",
+      "name": "HARBOR",
+      "subtitle": "PROPERTIES"
+    },
+    {
+      "id": "vyne",
+      "name": "VYNE",
+      "subtitle": "HOMES"
+    },
+    {
+      "id": "monument",
+      "name": "MONUMENT",
+      "subtitle": "GROUP"
+    },
+    {
+      "id": "orion",
+      "name": "ORION",
+      "subtitle": "TOWERS"
+    },
+    {
+      "id": "terrain",
+      "name": "TERRAIN",
+      "subtitle": "ARCHITECTURE"
+    },
+    {
+      "id": "aurelia",
+      "name": "AURELIA",
+      "subtitle": "ESTATES"
+    },
+    {
+      "id": "strata",
+      "name": "STRATA",
+      "subtitle": "COLLECTIVE"
+    },
+    {
+      "id": "arcade",
+      "name": "ARCADE",
+      "subtitle": "STUDIO"
+    },
+    {
+      "id": "kinetic",
+      "name": "KINETIC",
+      "subtitle": "SPACES"
+    },
+    {
+      "id": "solace",
+      "name": "SOLACE",
+      "subtitle": "RESIDENCES"
+    }
+  ]
+}

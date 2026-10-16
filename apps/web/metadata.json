@@ -1,0 +1,8 @@
+{
+  "name": "Remix Design Forge | Architectural Visualization Studio",
+  "description": "Give your dream a shape of reality. Cinematic architectural visualization, photorealistic CGI, and spatial motion.",
+  "requestFramePermissions": [],
+  "majorCapabilities": [
+    "MAJOR_CAPABILITY_SERVER_SIDE_GEMINI_API"
+  ]
+}

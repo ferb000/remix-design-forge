@@ -1,0 +1,25 @@
+{
+  "name": "design-forge-api",
+  "private": true,
+  "version": "1.0.0",
+  "type": "module",
+  "engines": {
+    "node": ">=22"
+  },
+  "scripts": {
+    "dev": "node --watch --env-file-if-exists=.env src/server.js",
+    "start": "node --env-file-if-exists=.env src/server.js",
+    "build": "node --check src/app.js && node --check src/server.js",
+    "db:setup": "node --env-file-if-exists=.env src/setup.js",
+    "db:create": "node --env-file-if-exists=.env src/create-database.js",
+    "smtp:verify": "node --env-file-if-exists=.env src/verify-smtp.js",
+    "test": "node --env-file-if-exists=.env --test test/*.test.js"
+  },
+  "dependencies": {
+    "@aws-sdk/client-s3": "^3.1151.0",
+    "express": "^4.21.2",
+    "multer": "^2.0.2",
+    "nodemailer": "^10.1.1",
+    "pg": "^8.16.3"
+  }
+}

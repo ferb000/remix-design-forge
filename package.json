@@ -1,0 +1,32 @@
+{
+  "name": "design-forge-monorepo",
+  "private": true,
+  "version": "0.0.0",
+  "type": "module",
+  "workspaces": [
+    "apps/web",
+    "apps/api"
+  ],
+  "scripts": {
+    "dev": "concurrently --kill-others --names api,site \"npm run dev:api\" \"npm run dev:web\"",
+    "dev:web": "npm run dev --workspace=apps/web",
+    "dev:api": "npm run dev --workspace=apps/api",
+    "start:api": "npm run start --workspace=apps/api",
+    "db:setup": "npm run db:setup --workspace=apps/api",
+    "test:api": "npm run test --workspace=apps/api",
+    "smtp:verify": "npm run smtp:verify --workspace=apps/api",
+    "test:web": "playwright test",
+    "test:deploy": "node --test tests/deploy/*.test.js",
+    "build": "npm run build --workspaces",
+    "build:web": "npm run build --workspace=apps/web",
+    "preview": "npm run preview --workspace=apps/web",
+    "start": "npm run start --workspace=apps/web",
+    "clean": "npm run clean --workspace=apps/web",
+    "lint": "npm run lint --workspaces --if-present"
+  },
+  "devDependencies": {
+    "@playwright/test": "^1.64.0",
+    "concurrently": "^10.0.6",
+    "yaml": "^2.9.1"
+  }
+}

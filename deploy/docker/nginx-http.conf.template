@@ -1,0 +1,11 @@
+server {
+    listen 80;
+    server_name ${DOMAIN};
+    server_tokens off;
+    location = /healthz { access_log off; return 200 "ok\n"; }
+    location /.well-known/acme-challenge/ { root /var/www/certbot; }
+    location / {
+        default_type text/plain;
+        return 200 "Design Forge: HTTP is ready. Complete the HTTPS certificate step in deploy/README.md.\n";
+    }
+}
