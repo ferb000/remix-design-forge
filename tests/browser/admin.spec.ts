@@ -49,3 +49,35 @@ test('successful login enters the dashboard and logout returns to the protected 
   await page.goto('/admin');
   await expect(page).toHaveURL(/\/admin\/login$/);
 });
+
+test('administrator can replace website images on a narrow screen',async({page})=>{
+  await page.setViewportSize({width:320,height:740});
+  const saved:Record<string,string>={};
+  const image='data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAQAAAC1HAwCAAAAC0lEQVR42mP8/x8AAwMCAO+aoyoAAAAASUVORK5CYII=';
+  await page.route('**/api/site-content**',async route=>{
+    const path=new URL(route.request().url()).pathname;
+    if(route.request().method()==='PUT') {
+      expect(route.request().headers()['content-type']).toContain('multipart/form-data');
+      saved[path.split('/').pop()!]=image;
+      return route.fulfill({json:{success:true,data:{url:image}}});
+    }
+    return route.fulfill({json:{success:true,data:saved}});
+  });
+  await page.goto('/admin/login');
+  await page.locator('input[type=email]').fill('director@example.com');
+  await page.locator('input[type=password]').fill('a-real-password');
+  await page.getByText('Sign In To Console').click();
+  await page.getByRole('button',{name:'Website images',exact:true}).click();
+  await expect(page.getByRole('heading',{name:'Website images'})).toBeVisible();
+  expect(await page.evaluate(()=>document.documentElement.scrollWidth<=innerWidth+1)).toBeTruthy();
+  for(const label of ['About Me portrait','Creative Process: Nordic / discovery']) {
+    await page.getByLabel(label,{exact:true}).setInputFiles({name:'replacement.png',mimeType:'image/png',buffer:Buffer.from(image.split(',')[1],'base64')});
+    await expect(page.getByRole('status')).toContainText('Image saved');
+    await expect(page.getByRole('img',{name:label,exact:true})).toHaveAttribute('src',image);
+  }
+  await page.screenshot({path:'test-results/mobile-admin-images.png'});
+  await page.goto('/');
+  await page.getByRole('button',{name:'Open navigation menu'}).click();
+  await page.getByRole('dialog').getByRole('button',{name:'About',exact:true}).click();
+  await expect(page.getByRole('img',{name:'Ivan, Founder of Design Forge'}).first()).toHaveAttribute('src',image);
+});

@@ -16,7 +16,7 @@ export const AdminHeader: React.FC<AdminHeaderProps> = ({
   const { user, logout } = useAuth();
 
   return (
-    <header className="w-full bg-[#111216] border-b border-white/10 px-4 sm:px-8 py-3.5 flex items-center justify-between sticky top-0 z-40 backdrop-blur-xl">
+    <header className="w-full bg-[#111216] border-b border-white/10 px-4 sm:px-8 py-3.5 flex flex-wrap gap-3 items-center justify-between sticky top-0 z-40 backdrop-blur-xl">
       {/* Brand & Console Title */}
       <div className="flex items-center gap-3">
         <div className="w-9 h-9 rounded-lg bg-white/10 border border-white/15 flex items-center justify-center text-white">
@@ -39,9 +39,9 @@ export const AdminHeader: React.FC<AdminHeaderProps> = ({
           <button
             onClick={onSwitchToPublic}
             className="flex items-center gap-1.5 px-3 py-1.5 rounded-lg bg-white/5 hover:bg-white/15 border border-white/10 text-white/70 hover:text-white text-xs font-mono transition-colors cursor-pointer"
-            title="Open Public Showcase Website"
+            title="Open Public Showcase Website" aria-label="Open Public Showcase Website"
           >
-            <span>Live Public Site</span>
+            <span className="hidden sm:inline">Live Public Site</span>
             <ExternalLink className="w-3.5 h-3.5" />
           </button>
         )}

@@ -322,11 +322,11 @@ export const ConnectWithUsModal: React.FC<ConnectWithUsModalProps> = ({
 
                   {/* Work Email with copy symbol */}
                   <li className="flex items-center gap-2 group">
-                    <a href="mailto:hello@designforge.studio" className="hover:text-white transition-colors">
-                      hello@designforge.studio
+                    <a href="mailto:designforge25@gmail.com" className="hover:text-white transition-colors">
+                      designforge25@gmail.com
                     </a>
                     <button
-                      onClick={() => handleCopy('hello@designforge.studio', 'email')}
+                      onClick={() => handleCopy('designforge25@gmail.com', 'email')}
                       className="p-1 rounded text-white/40 hover:text-white hover:bg-white/10 transition-all cursor-pointer flex items-center gap-1 focus:outline-none"
                       aria-label="Copy email address"
                       title="Copy email address"
@@ -416,22 +416,22 @@ export const ConnectWithUsModal: React.FC<ConnectWithUsModalProps> = ({
       {/* ------------------------------------------------------------- */}
       {/* 3. SIMPLE POPUP FORM (NAME, EMAIL, MESSAGE)                   */}
       {/* ------------------------------------------------------------- */}
-      <AnimatePresence>
+      {createPortal(<AnimatePresence>
         {isFormPopupOpen && (
           <div
             role="dialog"
             aria-modal="true"
-            className="fixed inset-0 z-50 flex items-center justify-center p-4 sm:p-6 bg-black/80 backdrop-blur-xl"
+            className="fixed inset-0 z-[100] flex items-center justify-center p-2 sm:p-6 bg-black/80 backdrop-blur-xl"
           >
             <motion.div
               initial={{ opacity: 0, scale: 0.95, y: 15 }}
               animate={{ opacity: 1, scale: 1, y: 0 }}
               exit={{ opacity: 0, scale: 0.95, y: 15 }}
               transition={{ duration: 0.25 }}
-              className="relative w-full max-w-lg rounded-2xl bg-[#141519] border border-white/15 p-6 sm:p-8 shadow-2xl overflow-hidden"
+              className="relative w-full max-w-lg rounded-2xl bg-[#141519] border border-white/15 p-6 sm:p-8 shadow-2xl max-h-[calc(100dvh-1rem)] overflow-y-auto"
             >
               {/* Popup Header */}
-              <div className="flex items-center justify-between pb-4 border-b border-white/10">
+              <div className="flex items-center justify-between gap-3 pb-4 border-b border-white/10">
                 <div>
                   <h3 className="font-display text-xl sm:text-2xl font-bold text-white tracking-tight">
                     Start a Project
@@ -443,7 +443,7 @@ export const ConnectWithUsModal: React.FC<ConnectWithUsModalProps> = ({
 
                 <button
                   onClick={handleClosePopup}
-                  className="w-11 h-11 sm:w-12 sm:h-12 rounded-xl sm:rounded-2xl bg-white/5 hover:bg-white/15 border border-white/10 text-white/70 hover:text-white transition-all cursor-pointer flex items-center justify-center"
+                  className="w-11 h-11 sm:w-12 sm:h-12 rounded-xl sm:rounded-2xl bg-white/5 hover:bg-white/15 border border-white/10 text-white/70 hover:text-white transition-all cursor-pointer flex shrink-0 items-center justify-center"
                   aria-label="Close form"
                 >
                   <X className="w-4 h-4 sm:w-5 sm:h-5" />
@@ -540,7 +540,7 @@ export const ConnectWithUsModal: React.FC<ConnectWithUsModalProps> = ({
             </motion.div>
           </div>
         )}
-      </AnimatePresence>
+      </AnimatePresence>, document.body)}
     </div>
   );
 };

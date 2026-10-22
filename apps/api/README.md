@@ -71,6 +71,8 @@ Bearer authorization remains supported for explicit API clients.
 | POST | `/api/clients` | Admin; JSON or multipart `client` JSON + `logo` |
 | DELETE | `/api/clients/:id` | Admin; remove client |
 | POST | `/api/upload` | Admin; multipart `file`, returns `{ url }` |
+| GET | `/api/site-content` | Public; saved About Me and Creative Process image URLs |
+| PUT | `/api/site-content/:key` | Admin; multipart `image`, updates one website image |
 | GET | `/api/media/:name` | Public portfolio image streamed from private S3 |
 | POST | `/api/inquiries` | Public; name/email/message, returns `{ received, id }` |
 | GET | `/api/inquiries` | Admin; inbox with status and server timestamp |
@@ -80,14 +82,18 @@ Bearer authorization remains supported for explicit API clients.
 | GET | `/api/bookings/availability` | Public; upcoming dates and available 30-minute slots |
 
 The session, logout, and inquiry-status routes implement behaviors already
-present in the UI. No account registration, email delivery, external calendar,
-payments, or additional management screens are included.
+present in the UI. Account registration, external calendars and payments are
+not included. The Website images admin tab manages the About Me portrait and
+the seven source images reused throughout Creative Process. Upload a replacement
+then refresh the public website to see it. Original images remain as defaults
+until replaced. Keys are `aboutPortrait`, `processNordic`, `processTower`,
+`processKyoto`, `processSpiral`, `processInterior`, `processDesert`, and `processCoastal`.
 
 The website's Connect section opens the scheduler through “Schedule
 Consultation.” Availability uses upcoming weekdays within a rolling 30-day
 window and the existing six start times: 10:00, 11:30, 14:00, 16:00, 17:30,
-and 19:00 CET. CET means fixed UTC+01:00 throughout the year, as explicitly
-labeled by the original scheduler. Reservations last 30 minutes and share
+and 19:00 GMT in Africa/Accra (UTC+00:00 throughout the year). Legacy CET
+reservations retain their original UTC instants. Reservations last 30 minutes and share
 one studio calendar across services. Pending and confirmed bookings occupy
 slots; completed bookings do not. Past or invalid dates and unsupported times
 are rejected. Availability responses include date, time, UTC start/end, and
@@ -134,8 +140,10 @@ POST /api/bookings and POST /api/inquiries include `data.emailStatus` with
 `queued` or `disabled`. The frontend displays an email notice when queued.
 The API worker checks the durable email_outbox table every five seconds,
 with up to five delivery attempts. Failures do not remove saved submissions.
-Only the submitting visitor receives a confirmation; internal notifications,
-meeting links, and calendar invitations are not generated. No email is queued
+The visitor receives a confirmation and ADMIN_EMAIL receives a separate
+notification containing the submission details. Administrator notifications
+use the visitor's email as Reply-To. Meeting links and calendar invitations
+are not generated. No email is queued
 for invalid or overlapping bookings. SMTP acceptance does not guarantee inbox
 delivery; process failure after acceptance can result in a duplicate retry.
 

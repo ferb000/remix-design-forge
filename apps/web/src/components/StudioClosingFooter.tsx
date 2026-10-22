@@ -180,8 +180,8 @@ export const StudioClosingFooter: React.FC<StudioClosingFooterProps> = ({
                     </a>
                   </li>
                   <li>
-                    <a href="mailto:hello@designforge.studio" className="hover:text-white transition-colors">
-                      hello@designforge.studio
+                    <a href="mailto:designforge25@gmail.com" className="hover:text-white transition-colors">
+                      designforge25@gmail.com
                     </a>
                   </li>
                   <li className="pt-2">
@@ -232,8 +232,8 @@ export const StudioClosingFooter: React.FC<StudioClosingFooterProps> = ({
               <span className="mx-2">|</span>
               <span>+233 20 000 0000</span>
               <span className="mx-2">|</span>
-              <a href="mailto:hello@designforge.studio" className="hover:text-white/70 transition-colors">
-                hello@designforge.studio
+              <a href="mailto:designforge25@gmail.com" className="hover:text-white/70 transition-colors">
+                designforge25@gmail.com
               </a>
             </div>
 

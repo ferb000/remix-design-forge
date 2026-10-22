@@ -57,6 +57,8 @@ sudo docker compose logs --tail=100 api
 Verification opens an SMTP connection without sending mail. Confirmation
 jobs are committed with their submissions. The worker checks every five
 seconds and tries up to five total deliveries, waiting 1, 2, 4, then 8 minutes.
+Each submission queues a visitor confirmation and a separate ADMIN_EMAIL
+notification. Job IDs start with `confirmation-` and `notification-` respectively.
 Failed delivery does not undo a booking or inquiry. SMTP acceptance does not
 prove inbox delivery; consult the provider's delivery logs and spam folder.
 

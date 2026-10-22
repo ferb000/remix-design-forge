@@ -1,3 +1,4 @@
+import { useSiteContent } from '../services/siteContent';
 import React, { useState, useEffect, useRef } from 'react';
 import { createPortal } from 'react-dom';
 import { motion, AnimatePresence } from 'framer-motion';
@@ -18,6 +19,7 @@ export const AboutUsView: React.FC<AboutUsViewProps> = ({
   onNavigateWork,
   onNavigateClients,
 }) => {
+  const contentImages = useSiteContent();
   const [isFullScreenImageOpen, setIsFullScreenImageOpen] = useState(false);
   const [zoomLevel, setZoomLevel] = useState<number>(1);
   const [isFillScreen, setIsFillScreen] = useState<boolean>(false);
@@ -158,7 +160,7 @@ export const AboutUsView: React.FC<AboutUsViewProps> = ({
             aria-label="Click to preview Ivan's portrait in full screen mode"
           >
             <img
-              src="https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?auto=format&fit=crop&w=1200&q=85"
+              src={contentImages.aboutPortrait || "https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?auto=format&fit=crop&w=1200&q=85"}
               alt="Ivan, Founder of Design Forge"
               onClick={handleOpenFullScreen}
               className="w-full h-full object-cover object-[center_24%] filter grayscale contrast-110 brightness-95 group-hover:scale-105 transition-transform duration-500 cursor-pointer pointer-events-auto"
@@ -389,7 +391,7 @@ export const AboutUsView: React.FC<AboutUsViewProps> = ({
 
                 <div className="aspect-[4/5] sm:aspect-[3/4] w-full overflow-hidden relative cursor-pointer" onClick={handleOpenFullScreen}>
                   <img
-                    src="https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?auto=format&fit=crop&w=1200&q=85"
+                    src={contentImages.aboutPortrait || "https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?auto=format&fit=crop&w=1200&q=85"}
                     alt="Ivan, Founder of Design Forge"
                     onClick={handleOpenFullScreen}
                     className="w-full h-full object-cover object-[center_28%] filter grayscale contrast-110 brightness-95 group-hover:scale-105 transition-transform duration-700 cursor-pointer pointer-events-auto"
@@ -596,7 +598,7 @@ export const AboutUsView: React.FC<AboutUsViewProps> = ({
                   }`}
                 >
                   <img
-                    src="https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?auto=format&fit=crop&w=2400&q=95"
+                    src={contentImages.aboutPortrait || "https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?auto=format&fit=crop&w=2400&q=95"}
                     alt="Ivan, Founder of Design Forge"
                     className={`select-none pointer-events-none transition-all duration-300 filter grayscale contrast-110 brightness-95 shadow-2xl ${
                       isFillScreen

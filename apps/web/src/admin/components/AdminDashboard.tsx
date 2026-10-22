@@ -6,6 +6,7 @@ import { ProjectsManager } from './ProjectsManager';
 import { ClientsManager } from './ClientsManager';
 import { InquiriesInbox } from './InquiriesInbox';
 import { BookingsManager } from './BookingsManager';
+import { SiteContentManager } from './SiteContentManager';
 import { ApiSettingsModal } from './ApiSettingsModal';
 import { Briefcase, Users, Mail, Calendar } from 'lucide-react';
 
@@ -14,7 +15,7 @@ interface AdminDashboardProps {
 }
 
 export const AdminDashboard: React.FC<AdminDashboardProps> = ({ onSwitchToPublic }) => {
-  const [activeTab, setActiveTab] = useState<'projects' | 'clients' | 'inquiries' | 'bookings'>('projects');
+  const [activeTab, setActiveTab] = useState<'projects' | 'clients' | 'inquiries' | 'bookings' | 'content'>('projects');
   const [projects, setProjects] = useState<AdminProject[]>([]);
   const [clients, setClients] = useState<AdminClient[]>([]);
   const [inquiries, setInquiries] = useState<AdminInquiry[]>([]);
@@ -118,6 +119,7 @@ export const AdminDashboard: React.FC<AdminDashboardProps> = ({ onSwitchToPublic
         </div>
       </div>
 
+      <div className="px-4 sm:px-8 py-2 border-b border-white/10"><button onClick={()=>setActiveTab('content')} className={activeTab==='content'?'text-sm bg-white text-black rounded px-4 py-2':'text-sm text-white/70 rounded px-4 py-2 bg-white/5'}>Website images</button></div>
       {/* Main Content Area */}
       <main className="flex-1 max-w-7xl w-full mx-auto p-4 sm:p-8">
         {isLoading ? (
@@ -126,6 +128,7 @@ export const AdminDashboard: React.FC<AdminDashboardProps> = ({ onSwitchToPublic
           </div>
         ) : (
           <>
+            {activeTab === 'content' && <SiteContentManager />}
             {activeTab === 'projects' && (
               <ProjectsManager projects={projects} onRefresh={loadData} />
             )}

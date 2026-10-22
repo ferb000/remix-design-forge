@@ -1,3 +1,4 @@
+import { createPortal } from 'react-dom';
 import React, { useState, useEffect, useCallback, useRef } from 'react';
 import { X, Calendar, Clock, CheckCircle2, Building, ShieldCheck, Mail, ArrowRight, ArrowLeft } from 'lucide-react';
 import { STUDIO_INFO, STUDIO_SERVICES } from '../data/studioData';
@@ -15,7 +16,7 @@ export const ProjectSchedulerModal: React.FC<ProjectSchedulerModalProps> = ({ is
     projectName: '',
     firmName: '',
     location: '',
-    budget: '$10k - $25k',
+
     timeline: 'Within 30 Days',
     notes: '',
   });
@@ -23,7 +24,7 @@ export const ProjectSchedulerModal: React.FC<ProjectSchedulerModalProps> = ({ is
     name: '',
     email: '',
     phone: '',
-    role: 'Lead Architect',
+
   });
   const [selectedDate, setSelectedDate] = useState<string>('');
   const [selectedTime, setSelectedTime] = useState<string>('');
@@ -68,6 +69,12 @@ export const ProjectSchedulerModal: React.FC<ProjectSchedulerModalProps> = ({ is
       setSelectedTime('');
     }
   }, [availability, selectedDate, selectedTime, isSubmitted]);
+  useEffect(() => {
+    if (!isOpen) return;
+    const close = (event: KeyboardEvent) => { if (event.key === 'Escape') onClose(); };
+    window.addEventListener('keydown', close);
+    return () => window.removeEventListener('keydown', close);
+  }, [isOpen, onClose]);
   const availableDates = (availability?.dates || []).map(day => ({ ...day,
     day: new Date(day.date + 'T12:00:00Z').toLocaleDateString('en-GB', { weekday: 'short', timeZone: 'UTC' }),
     num: new Date(day.date + 'T12:00:00Z').toLocaleDateString('en-GB', { day: 'numeric', month: 'short', timeZone: 'UTC' }),
@@ -92,12 +99,12 @@ export const ProjectSchedulerModal: React.FC<ProjectSchedulerModalProps> = ({ is
       name: clientInfo.name,
       email: clientInfo.email,
       phone: clientInfo.phone,
-      role: clientInfo.role,
+
       notes: projectDetails.notes,
       projectName: projectDetails.projectName,
       firmName: projectDetails.firmName,
       location: projectDetails.location,
-      budget: projectDetails.budget,
+
       timeline: projectDetails.timeline,
     });
       setEmailQueued(response.data.emailStatus === 'queued');
@@ -121,22 +128,22 @@ export const ProjectSchedulerModal: React.FC<ProjectSchedulerModalProps> = ({ is
     onClose();
   };
 
-  return (
+  return createPortal(
     <div
       role="dialog"
       aria-modal="true"
-      className="fixed inset-0 z-[90] flex items-center justify-center p-4 sm:p-6 bg-black/85 backdrop-blur-xl transition-all overflow-y-auto"
+      className="fixed inset-0 z-[90] flex items-center justify-center p-2 sm:p-6 bg-black/85 backdrop-blur-xl transition-all overflow-hidden"
     >
-      <div className="relative w-full max-w-2xl bg-[#121214] border border-white/15 rounded-xl shadow-2xl overflow-hidden my-8">
+      <div className="relative w-full max-w-2xl bg-[#121214] border border-white/15 rounded-xl shadow-2xl overflow-hidden max-h-[calc(100dvh-1rem)] sm:max-h-[calc(100dvh-3rem)] flex flex-col">
         
         {/* Modal Top Bar */}
-        <div className="flex items-center justify-between px-6 py-5 border-b border-white/10 bg-white/[0.02]">
+        <div className="flex shrink-0 items-center justify-between gap-2 px-4 sm:px-6 py-3 sm:py-5 border-b border-white/10 bg-white/[0.02]">
           <div className="flex items-center gap-3">
             <div className="w-10 h-10 rounded-xl border border-white/20 flex items-center justify-center bg-white/5 flex-shrink-0">
               <Calendar className="w-5 h-5 text-white/80" />
             </div>
             <div>
-              <h3 className="font-display text-2xl sm:text-3xl md:text-4xl font-normal tracking-tight text-white leading-none">
+              <h3 className="font-display text-lg sm:text-2xl md:text-3xl font-normal tracking-tight text-white leading-none">
                 Schedule Consultation
               </h3>
               <p className="text-sm sm:text-base text-white/70 font-light mt-1">
@@ -155,8 +162,8 @@ export const ProjectSchedulerModal: React.FC<ProjectSchedulerModalProps> = ({ is
 
         {/* Progress Tracker (If not completed) */}
         {!isSubmitted && (
-          <div className="px-6 pt-4 pb-2 border-b border-white/5 bg-black/30">
-            <div className="flex items-center justify-between text-[11px] text-white/50 tracking-wider uppercase mb-2">
+          <div className="px-3 sm:px-6 pt-4 pb-2 shrink-0 border-b border-white/5 bg-black/30">
+            <div className="flex items-center justify-between text-[9px] sm:text-[11px] text-white/50 tracking-normal sm:tracking-wider uppercase mb-2">
               <span className={step >= 1 ? 'text-white font-medium' : ''}>01. Discipline</span>
               <span className="text-white/20">/</span>
               <span className={step >= 2 ? 'text-white font-medium' : ''}>02. Project Scope</span>
@@ -175,7 +182,7 @@ export const ProjectSchedulerModal: React.FC<ProjectSchedulerModalProps> = ({ is
         )}
 
         {/* Modal Body */}
-        <div className="p-6 sm:p-8">
+        <div className="p-4 sm:p-8 overflow-y-auto overscroll-contain min-h-0">
           {!isSubmitted && isLoadingSlots && <p role="status" className="text-xs text-white/60 mb-3">Checking available consultation slots...</p>}
           {!isSubmitted && slotError && (
             <div role="alert" className="text-sm text-red-300 mb-3">
@@ -255,7 +262,7 @@ export const ProjectSchedulerModal: React.FC<ProjectSchedulerModalProps> = ({ is
                           <div className="flex justify-between items-baseline mb-1">
                             <span className="font-mono text-xs text-white/40">{srv.number}</span>
                             <span className="text-[10px] tracking-wider uppercase text-white/50">
-                              {srv.turnaround}
+                              
                             </span>
                           </div>
                           <h5 className="font-semibold text-sm text-white">{srv.name}</h5>
@@ -317,21 +324,7 @@ export const ProjectSchedulerModal: React.FC<ProjectSchedulerModalProps> = ({ is
                         className="w-full px-3.5 py-2.5 rounded bg-white/5 border border-white/15 text-white text-xs focus:outline-none focus:border-white"
                       />
                     </div>
-                    <div>
-                      <label className="block text-[11px] font-medium uppercase tracking-wider text-white/70 mb-1.5">
-                        Estimated Budget Range
-                      </label>
-                      <select
-                        value={projectDetails.budget}
-                        onChange={e => setProjectDetails({ ...projectDetails, budget: e.target.value })}
-                        className="w-full px-3 py-2.5 rounded bg-[#18181b] border border-white/15 text-white text-xs focus:outline-none focus:border-white"
-                      >
-                        <option value="Under $10,000">Under $10,000 (Small Pavilion / Concept)</option>
-                        <option value="$10,000 - $25,000">$10,000 – $25,000 (Luxury Residence / Stills)</option>
-                        <option value="$25,000 - $50,000">$25,000 – $50,000 (Full Film & Multi-View)</option>
-                        <option value="$50,000+">$50,000+ (Masterplan / Unreal Engine 5 VR)</option>
-                      </select>
-                    </div>
+
                     <div>
                       <label className="block text-[11px] font-medium uppercase tracking-wider text-white/70 mb-1.5">
                         Target Completion
@@ -399,7 +392,7 @@ export const ProjectSchedulerModal: React.FC<ProjectSchedulerModalProps> = ({ is
                     <label className="block text-[11px] font-medium uppercase tracking-wider text-white/70">
                       Select Date (Upcoming Studio Openings)
                     </label>
-                    <p className="text-xs text-white/50">30-minute calls · CET (UTC+01:00)</p>
+                    <p className="text-xs text-white/50">30-minute calls · GMT · Accra (UTC+00:00)</p>
                     {!isLoadingSlots && availability && !availableDates.some(day => day.slots.some(slot => slot.available)) && (
                       <p role="status" className="text-xs text-white/60">No consultation slots are available in the next 30 days. Please contact the studio.</p>
                     )}
@@ -418,9 +411,6 @@ export const ProjectSchedulerModal: React.FC<ProjectSchedulerModalProps> = ({ is
                                 : 'border-white/15 bg-white/5 text-white/80 hover:border-white/40'
                             }`}
                           >
-                            <span className="block text-[10px] uppercase font-mono tracking-wider opacity-70">
-                              {d.day}
-                            </span>
                             <span className="block text-base font-bold font-display mt-0.5">
                               {d.num}
                             </span>
@@ -486,7 +476,7 @@ export const ProjectSchedulerModal: React.FC<ProjectSchedulerModalProps> = ({ is
                       Confirm Consultation & Details
                     </h4>
                     <p className="text-xs text-white/60 mt-1">
-                      Your slot is confirmed only after the studio accepts this reservation.
+                      Your time is reserved when you submit this form.
                     </p>
                   </div>
 
@@ -529,18 +519,7 @@ export const ProjectSchedulerModal: React.FC<ProjectSchedulerModalProps> = ({ is
                         className="w-full px-3.5 py-2.5 rounded bg-white/5 border border-white/15 text-white text-xs focus:outline-none focus:border-white"
                       />
                     </div>
-                    <div>
-                      <label className="block text-[11px] font-medium uppercase tracking-wider text-white/70 mb-1.5">
-                        Role
-                      </label>
-                      <input
-                        type="text"
-                        placeholder="Principal / Design Director"
-                        value={clientInfo.role}
-                        onChange={e => setClientInfo({ ...clientInfo, role: e.target.value })}
-                        className="w-full px-3.5 py-2.5 rounded bg-white/5 border border-white/15 text-white text-xs focus:outline-none focus:border-white"
-                      />
-                    </div>
+
                   </div>
 
                   {/* Summary Box */}
@@ -577,6 +556,6 @@ export const ProjectSchedulerModal: React.FC<ProjectSchedulerModalProps> = ({ is
         </div>
 
       </div>
-    </div>
+    </div>, document.body
   );
 };

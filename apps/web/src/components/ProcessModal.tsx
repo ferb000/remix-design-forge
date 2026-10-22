@@ -1,3 +1,4 @@
+import { useSiteContent } from '../services/siteContent';
 import React, { useState, useEffect, useRef } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import {
@@ -147,6 +148,15 @@ export const ProcessModal: React.FC<ProcessModalProps> = ({
   onNavigatePrev,
   onNavigateNext,
 }) => {
+  const contentImages = useSiteContent();
+  const imageNordic = contentImages.processNordic || imgNordic;
+  const imageTower = contentImages.processTower || imgTower;
+  const imageKyoto = contentImages.processKyoto || imgKyoto;
+  const imageSpiral = contentImages.processSpiral || imgSpiral;
+  const imageInterior = contentImages.processInterior || imgInterior;
+  const imageDesert = contentImages.processDesert || imgDesert;
+  const imageCoastal = contentImages.processCoastal || imgCoastal;
+
   const [activeIndex, setActiveIndex] = useState(0);
   const [direction, setDirection] = useState(1);
   const isTransitioningRef = useRef(false);
@@ -358,7 +368,7 @@ export const ProcessModal: React.FC<ProcessModalProps> = ({
                 {currentStep.type === 'brief' && (
                   <div className="w-full h-full relative overflow-hidden flex flex-col justify-between p-4 sm:p-7 lg:p-9 bg-[#131317]">
                     <img
-                      src={imgNordic}
+                      src={imageNordic}
                       alt="Project Discovery & Brief Scope Canvas"
                       className="absolute inset-0 w-full h-full object-cover filter brightness-[0.25] contrast-125"
                     />
@@ -413,7 +423,7 @@ export const ProcessModal: React.FC<ProcessModalProps> = ({
                     {/* Primary reference - 64% width */}
                     <div className="col-span-8 h-full relative overflow-hidden border-r border-white/10 group">
                       <img
-                        src={imgDesert}
+                        src={imageDesert}
                         alt="Primary Look Direction: Warm Twilight Cantilever"
                         className="w-full h-full object-cover"
                       />
@@ -427,7 +437,7 @@ export const ProcessModal: React.FC<ProcessModalProps> = ({
                     <div className="col-span-4 h-full flex flex-col">
                       <div className="h-1/2 relative overflow-hidden border-b border-white/10 group">
                         <img
-                          src={imgKyoto}
+                          src={imageKyoto}
                           alt="Material Reference: Natural Cedar Light"
                           className="w-full h-full object-cover"
                         />
@@ -438,7 +448,7 @@ export const ProcessModal: React.FC<ProcessModalProps> = ({
                       </div>
                       <div className="h-1/2 relative overflow-hidden group">
                         <img
-                          src={imgSpiral}
+                          src={imageSpiral}
                           alt="Material Reference: Honed Travertine"
                           className="w-full h-full object-cover"
                         />
@@ -457,7 +467,7 @@ export const ProcessModal: React.FC<ProcessModalProps> = ({
                     {/* Left: 3D Viewport Geometry */}
                     <div className="h-full relative overflow-hidden border-r border-white/15 bg-[#141518] flex flex-col justify-between">
                       <img
-                        src={imgDesert}
+                        src={imageDesert}
                         alt="3D CAD Viewport Geometry"
                         className="w-full h-full object-cover filter grayscale contrast-200 brightness-90 opacity-75"
                       />
@@ -473,7 +483,7 @@ export const ProcessModal: React.FC<ProcessModalProps> = ({
                     {/* Right: AI Atmosphere Exploration */}
                     <div className="h-full relative overflow-hidden bg-[#161424]">
                       <img
-                        src={imgCoastal}
+                        src={imageCoastal}
                         alt="AI Atmosphere Exploration"
                         className="w-full h-full object-cover"
                       />
@@ -492,9 +502,9 @@ export const ProcessModal: React.FC<ProcessModalProps> = ({
                 {currentStep.type === 'camera-review' && (
                   <div className="w-full h-full grid grid-cols-3 gap-0 overflow-hidden relative">
                     {[
-                      { img: imgNordic, label: 'Angle A · Pedestrian Approach', chosen: true },
-                      { img: imgTower, label: 'Angle B · Skyline Twilight', chosen: false },
-                      { img: imgCoastal, label: 'Angle C · 45° Corner Horizon', chosen: false },
+                      { img: imageNordic, label: 'Angle A · Pedestrian Approach', chosen: true },
+                      { img: imageTower, label: 'Angle B · Skyline Twilight', chosen: false },
+                      { img: imageCoastal, label: 'Angle C · 45° Corner Horizon', chosen: false },
                     ].map((cam, idx) => (
                       <div
                         key={idx}
@@ -529,7 +539,7 @@ export const ProcessModal: React.FC<ProcessModalProps> = ({
                 {currentStep.type === 'clay' && (
                   <div className="w-full h-full relative overflow-hidden group">
                     <img
-                      src={imgCoastal}
+                      src={imageCoastal}
                       alt="Clay Render: Pure Monochrome Architectural Massing Study"
                       className="w-full h-full object-cover filter grayscale contrast-125 brightness-95"
                     />
@@ -540,7 +550,7 @@ export const ProcessModal: React.FC<ProcessModalProps> = ({
                 {currentStep.type === 'lighting' && (
                   <div className="w-full h-full relative overflow-hidden group">
                     <img
-                      src={imgInterior}
+                      src={imageInterior}
                       alt="General Feeling Stage: Directional Sunlight & Atmosphere"
                       className="w-full h-full object-cover"
                     />
@@ -551,7 +561,7 @@ export const ProcessModal: React.FC<ProcessModalProps> = ({
                 {currentStep.type === 'materials' && (
                   <div className="w-full h-full relative overflow-hidden group">
                     <img
-                      src={imgSpiral}
+                      src={imageSpiral}
                       alt="Continuous Scene: Material Development"
                       className="w-full h-full object-cover"
                     />
@@ -579,7 +589,7 @@ export const ProcessModal: React.FC<ProcessModalProps> = ({
                 {currentStep.type === 'markup' && (
                   <div className="w-full h-full relative overflow-hidden group">
                     <img
-                      src={imgDesert}
+                      src={imageDesert}
                       alt="Continuous Scene: Near-Final Client Review"
                       className="w-full h-full object-cover"
                     />
@@ -596,7 +606,7 @@ export const ProcessModal: React.FC<ProcessModalProps> = ({
                 {currentStep.type === 'final' && (
                   <div className="w-full h-full relative overflow-hidden group">
                     <img
-                      src={imgTower}
+                      src={imageTower}
                       alt="Continuous Scene: Final 8K Master Render"
                       className="w-full h-full object-cover"
                     />
@@ -615,7 +625,7 @@ export const ProcessModal: React.FC<ProcessModalProps> = ({
                 {currentStep.type === 'timeline' && (
                   <div className="w-full h-full relative overflow-hidden flex flex-col justify-between p-4 sm:p-7 lg:p-9 bg-[#131317]">
                     <img
-                      src={imgTower}
+                      src={imageTower}
                       alt="Timeline Background"
                       className="absolute inset-0 w-full h-full object-cover filter brightness-[0.25] contrast-125"
                     />

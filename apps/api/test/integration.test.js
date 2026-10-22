@@ -24,7 +24,7 @@ test('existing website and admin flows persist through the real PostgreSQL API',
   let base;
   let clock=Date.parse('2026-10-11T12:00:00Z');
   const start=async()=>{
-    const app=createApp({pool,uploadsDir,mailEnabled:true,publicUrl:'http://localhost:3002',now:()=>clock});
+    const app=createApp({pool,uploadsDir,mailEnabled:true,adminNotificationEmail:null,publicUrl:'http://localhost:3002',now:()=>clock});
     server=app.listen(0,'127.0.0.1');
     await new Promise(resolve=>server.once('listening',resolve));
     base='http://127.0.0.1:'+server.address().port;
@@ -137,71 +137,88 @@ test('existing website and admin flows persist through the real PostgreSQL API',
       assert.equal((await call('/api/inquiries','POST',{name:'Client',email:'invalid',message:'Test'})).status,400);
     });
     await t.test('website bookings retain scheduler data for admin',async()=>{
-      const submitted=await call('/api/bookings','POST',{serviceId:'cinematic-cgi',serviceName:'Cinematic CGI',date:'2026-10-12',time:'14:00 CET',name:'Client',email:'client@example.com',role:'Lead Architect',notes:'Notes',projectName:'Existing project',firmName:'Firm',location:'City',budget:'$10k - $25k',timeline:'Within 30 Days'});
+      const submitted=await call('/api/bookings','POST',{serviceId:'cinematic-cgi',serviceName:'Cinematic CGI',date:'2026-10-12',time:'14:00 GMT',name:'Client',email:'client@example.com',role:'Lead Architect',notes:'Notes',projectName:'Existing project',firmName:'Firm',location:'City',budget:'$10k - $25k',timeline:'Within 30 Days'});
       assert.equal(submitted.status,201); bookingId=submitted.json.data.reservationId;
       const bookings=await call('/api/bookings','GET',undefined,token);
       assert.equal(bookings.json.data[0].id,bookingId); assert.equal(bookings.json.data[0].status,'confirmed'); assert.equal(bookings.json.data[0].projectName,'Existing project');
     });
     await t.test('availability shows upcoming weekdays without exposing booking details',async()=>{
       const result=await call('/api/bookings/availability'); assert.equal(result.status,200);
-      assert.equal(result.json.data.durationMinutes,30); assert.equal(result.json.data.timeZone,'CET (UTC+01:00)');
+      assert.equal(result.json.data.durationMinutes,30); assert.equal(result.json.data.timeZone,'Africa/Accra (GMT, UTC+00:00)');
       const dates=result.json.data.dates;
       assert.equal(dates[0].date,'2026-10-12');
       assert.ok(dates.every(day=>![0,6].includes(new Date(day.date).getUTCDay())));
-      assert.equal(dates[0].slots.find(slot=>slot.time==='14:00 CET').available,false);
-      assert.equal(dates[0].slots.find(slot=>slot.time==='10:00 CET').startsAt,'2026-10-12T09:00:00.000Z');
+      assert.equal(dates[0].slots.find(slot=>slot.time==='14:00 GMT').available,false);
+      assert.equal(dates[0].slots.find(slot=>slot.time==='10:00 GMT').startsAt,'2026-10-12T10:00:00.000Z');
       assert.ok(!JSON.stringify(result.json).includes('client@example.com'));
       const res=await fetch(base+'/api/bookings/availability'); assert.equal(res.headers.get('cache-control'),'no-store');
     });
     await t.test('past, weekend, impossible dates, off-schedule times, and distant bookings are rejected',async()=>{
-      const payload={serviceId:'cinematic-cgi',serviceName:'CGI',date:'2026-10-12',time:'10:00 CET',name:'Client',email:'client@example.com'};
-      for(const updates of [{date:'2026-10-10'},{date:'2026-10-17'},{date:'2026-11-10'},{date:'2026-02-30'},{time:'10:15 CET'},{time:'10:00 GMT'},{time:'25:00 CET'}]) {
+      const payload={serviceId:'cinematic-cgi',serviceName:'CGI',date:'2026-10-12',time:'10:00 GMT',name:'Client',email:'client@example.com'};
+      for(const updates of [{date:'2026-10-10'},{date:'2026-10-17'},{date:'2026-11-10'},{date:'2026-02-30'},{time:'10:15 GMT'},{time:'10:00 CET'},{time:'25:00 GMT'}]) {
         assert.equal((await call('/api/bookings','POST',{...payload,...updates})).status,400);
       }
-      clock=Date.parse('2026-10-12T09:00:00Z');
+      clock=Date.parse('2026-10-12T10:00:00Z');
       assert.equal((await call('/api/bookings','POST',payload)).status,400);
-      assert.ok(!(await call('/api/bookings/availability')).json.data.dates[0].slots.some(slot=>slot.time==='10:00 CET'));
+      assert.ok(!(await call('/api/bookings/availability')).json.data.dates[0].slots.some(slot=>slot.time==='10:00 GMT'));
       clock=Date.parse('2026-10-11T12:00:00Z');
     });
     await t.test('simultaneous reservations across services allow exactly one winner',async()=>{
-      const payload={serviceId:'cinematic-cgi',serviceName:'CGI',date:'2026-10-13',time:'10:00 CET',name:'Client',email:'client@example.com'};
+      const payload={serviceId:'cinematic-cgi',serviceName:'CGI',date:'2026-10-13',time:'10:00 GMT',name:'Client',email:'client@example.com'};
       const results=await Promise.all([call('/api/bookings','POST',payload),call('/api/bookings','POST',{...payload,serviceId:'showreel-animation',serviceName:'Film'})]);
       assert.deepEqual(results.map(result=>result.status).sort(),[201,409]);
       assert.match(results.find(result=>result.status===409).json.message,/choose another time/i);
       assert.equal((await call('/api/bookings/availability')).json.data.dates.find(day=>day.date===payload.date).slots.find(slot=>slot.time===payload.time).available,false);
     });
     await t.test('partially overlapping reservations block slots, while adjacent intervals are allowed',async()=>{
-      const data={id:'existing-partial',date:'2026-10-13',time:'11:45 CET',status:'pending'};
-      await pool.query("INSERT INTO bookings(id,data,reserved_range) VALUES($1,$2,tstzrange($3,$4,'[)'))",[data.id,data,'2026-10-13T10:45:00Z','2026-10-13T11:15:00Z']);
-      const payload={serviceId:'cinematic-cgi',serviceName:'CGI',date:'2026-10-13',time:'11:30 CET',name:'Client',email:'client@example.com'};
+      const data={id:'existing-partial',date:'2026-10-13',time:'11:45 GMT',status:'pending'};
+      await pool.query("INSERT INTO bookings(id,data,reserved_range) VALUES($1,$2,tstzrange($3,$4,'[)'))",[data.id,data,'2026-10-13T11:45:00Z','2026-10-13T12:15:00Z']);
+      const payload={serviceId:'cinematic-cgi',serviceName:'CGI',date:'2026-10-13',time:'11:30 GMT',name:'Client',email:'client@example.com'};
       assert.equal((await call('/api/bookings','POST',payload)).status,409);
       assert.equal((await call('/api/bookings/availability')).json.data.dates.find(day=>day.date===payload.date).slots.find(slot=>slot.time===payload.time).available,false);
-      await assert.rejects(pool.query("INSERT INTO bookings(id,data,reserved_range) VALUES('overlap',$1,tstzrange($2,$3,'[)'))",[{status:'confirmed'},'2026-10-13T09:15:00Z','2026-10-13T09:45:00Z']),error=>error.code==='23P01');
-      await pool.query("INSERT INTO bookings(id,data,reserved_range) VALUES('adjacent',$1,tstzrange($2,$3,'[)'))",[{status:'confirmed'},'2026-10-13T09:30:00Z','2026-10-13T10:00:00Z']);
+      await assert.rejects(pool.query("INSERT INTO bookings(id,data,reserved_range) VALUES('overlap',$1,tstzrange($2,$3,'[)'))",[{status:'confirmed'},'2026-10-13T10:15:00Z','2026-10-13T10:45:00Z']),error=>error.code==='23P01');
+      await pool.query("INSERT INTO bookings(id,data,reserved_range) VALUES('adjacent',$1,tstzrange($2,$3,'[)'))",[{status:'confirmed'},'2026-10-13T10:30:00Z','2026-10-13T11:00:00Z']);
     });
     await t.test('existing bookings are migrated into availability without losing their details',async()=>{
       await pool.query('ALTER TABLE bookings ALTER COLUMN reserved_range DROP NOT NULL');
-      const legacy={id:'legacy-booking',date:'2026-10-15',time:'16:00 CET',status:'confirmed',name:'Legacy Client',email:'legacy@example.com'};
+      const legacy={id:'legacy-booking',date:'2026-10-15',time:'17:00 CET',status:'confirmed',name:'Legacy Client',email:'legacy@example.com'};
       await pool.query('INSERT INTO bookings(id,data) VALUES($1,$2)',[legacy.id,legacy]);
       await migrate(pool);
       const saved=await pool.query('SELECT data,lower(reserved_range) AS start FROM bookings WHERE id=$1',[legacy.id]);
       assert.equal(saved.rows[0].data.name,legacy.name);
-      assert.equal(saved.rows[0].data.startsAt,'2026-10-15T15:00:00.000Z');
-      assert.equal((await call('/api/bookings/availability')).json.data.dates.find(day=>day.date===legacy.date).slots.find(slot=>slot.time===legacy.time).available,false);
+      assert.equal(saved.rows[0].data.startsAt,'2026-10-15T16:00:00.000Z');
+      assert.equal((await call('/api/bookings/availability')).json.data.dates.find(day=>day.date===legacy.date).slots.find(slot=>slot.time==='16:00 GMT').available,false);
     });
     await t.test('completed reservations do not occupy availability',async()=>{
       await pool.query("INSERT INTO bookings(id,data,reserved_range) VALUES('completed',$1,tstzrange($2,$3,'[)'))",[{status:'completed'},'2026-10-14T09:00:00Z','2026-10-14T09:30:00Z']);
-      assert.equal((await call('/api/bookings/availability')).json.data.dates.find(day=>day.date==='2026-10-14').slots.find(slot=>slot.time==='10:00 CET').available,true);
+      assert.equal((await call('/api/bookings/availability')).json.data.dates.find(day=>day.date==='2026-10-14').slots.find(slot=>slot.time==='10:00 GMT').available,true);
     });
     await t.test('confirmed bookings and inquiries queue emails, conflicts and invalid requests do not',async()=>{
       const jobs=await pool.query('SELECT * FROM email_outbox');
       assert.ok(jobs.rows.some(job=>job.kind==='bookings' && job.payload.id===bookingId));
       assert.ok(jobs.rows.some(job=>job.kind==='inquiries' && job.payload.id===inquiryId));
       assert.ok(jobs.rows.every(job=>job.status==='pending' && job.attempts===0));
-      const reserved=await pool.query("SELECT count(*) FROM bookings WHERE data->>'date'='2026-10-13' AND data->>'time'='10:00 CET'");
+      const reserved=await pool.query("SELECT count(*) FROM bookings WHERE data->>'date'='2026-10-13' AND data->>'time'='10:00 GMT'");
       assert.equal(Number(reserved.rows[0].count),1);
-      assert.equal(jobs.rows.filter(job=>job.kind==='bookings' && job.payload.date==='2026-10-13' && job.payload.time==='10:00 CET').length,1);
+      assert.equal(jobs.rows.filter(job=>job.kind==='bookings' && job.payload.date==='2026-10-13' && job.payload.time==='10:00 GMT').length,1);
       assert.ok(jobs.rows.every(job=>!('notes' in job.payload) && !('message' in job.payload)));
+    });
+    await t.test('admin notifications retain the inquiry and client confirmation stays separate',async()=>{
+      await saveSubmission(pool,'inquiries',{id:'dual-mail-check',name:'Visitor',email:'visitor@example.com',message:'Please discuss my project'},true,'admin@example.com');
+      const jobs=(await pool.query("SELECT * FROM email_outbox WHERE payload->>'id'='dual-mail-check' ORDER BY id")).rows;
+      assert.equal(jobs.length,2);
+      assert.equal(jobs.find(job=>job.recipient==='admin@example.com').payload.message,'Please discuss my project');
+      assert.equal(jobs.find(job=>job.recipient==='visitor@example.com').payload.message,undefined);
+      await pool.query("UPDATE email_outbox SET status='sent' WHERE payload->>'id'='dual-mail-check'");
+    });
+    await t.test('site content image writes require authentication and survive reads',async()=>{
+      assert.equal((await call('/api/site-content')).status,200);
+      const form=new FormData();form.append('image',new Blob([Buffer.from('89504e470d0a1a0a00000000','hex')],{type:'image/png'}),'portrait.png');
+      assert.equal((await call('/api/site-content/aboutPortrait','PUT',form)).status,401);
+      const saved=await call('/api/site-content/aboutPortrait','PUT',form,token);
+      assert.equal(saved.status,200);
+      assert.equal((await call('/api/site-content')).json.data.aboutPortrait,saved.json.data.url);
+      assert.equal((await call('/api/site-content/notAllowed','PUT',form,token)).status,400);
     });
     await t.test('submission rolls back if its confirmation cannot be durably queued',async()=>{
       await pool.query('INSERT INTO email_outbox(id,kind,recipient,payload) VALUES($1,$2,$3,$4)',['confirmation-atomic-check','inquiries','visitor@example.com',{}]);
@@ -243,7 +260,7 @@ test('existing website and admin flows persist through the real PostgreSQL API',
       assert.equal((await call('/api/projects/'+projectId)).json.data.title,'Updated Render');
       assert.equal((await call('/api/inquiries','GET',undefined,token)).json.data.find(i=>i.id===inquiryId).status,'reviewed');
       assert.ok((await call('/api/bookings','GET',undefined,token)).json.data.some(booking=>booking.id===bookingId));
-      assert.equal((await call('/api/bookings/availability')).json.data.dates[0].slots.find(slot=>slot.time==='14:00 CET').available,false);
+      assert.equal((await call('/api/bookings/availability')).json.data.dates[0].slots.find(slot=>slot.time==='14:00 GMT').available,false);
     });
     await t.test('deletions remain deleted after setup runs again',async()=>{
       assert.equal((await call('/api/projects/'+projectId,'DELETE',undefined,token)).status,200);

@@ -107,7 +107,7 @@ export const OurWorkSlider = ({
     if (catIdx !== -1) {
       setSwipeDirection(catIdx > activeIndex ? 1 : -1);
       setActiveIndex(catIdx);
-      if (activeCategoryOverride.openGallery) {
+      if (activeCategoryOverride.openGallery && activeCategoryOverride.id !== 'vr') {
         setSelectedGalleryCategory(WORK_CATEGORIES[catIdx]);
       }
     }
@@ -275,8 +275,9 @@ export const OurWorkSlider = ({
                   handlePrev();
                 }
               }}
-              onClick={() => setSelectedGalleryCategory(activeMobileCat)}
-              className="relative flex flex-col items-center cursor-pointer w-full max-w-[280px] select-none touch-pan-y transform-gpu will-change-transform"
+              aria-disabled={activeMobileCat.id === 'vr'}
+              onClick={() => { if(activeMobileCat.id !== 'vr') setSelectedGalleryCategory(activeMobileCat); }}
+              className={`relative flex flex-col items-center w-full max-w-[280px] select-none touch-pan-y transform-gpu will-change-transform ${activeMobileCat.id === 'vr' ? 'grayscale opacity-35 cursor-not-allowed' : 'cursor-pointer'}`}
             >
               {/* --------------------------------------------------- */}
               {/* SPREAD CARDS DECK: 5 FAN-OUT LAYERS (MATCHING DESKTOP) */}
@@ -434,13 +435,15 @@ export const OurWorkSlider = ({
             return (
               <div
                 key={cat.id}
+                aria-disabled={cat.id === 'vr'}
                 onClick={() => {
+                  if(cat.id === 'vr') return;
                   setActiveIndex(idx);
                   setSelectedGalleryCategory(cat);
                 }}
                 onMouseEnter={() => setHoveredIndex(idx)}
                 onMouseLeave={() => setHoveredIndex(null)}
-                className={`relative flex flex-col items-center cursor-pointer transition-all duration-500 ease-out w-full ${
+                className={`relative flex flex-col items-center ${cat.id === 'vr' ? 'grayscale !opacity-35 !cursor-not-allowed' : 'cursor-pointer'} transition-all duration-500 ease-out w-full ${
                   isSelectedOrHovered
                     ? 'scale-110 xl:scale-115 opacity-100 z-30'
                     : 'scale-90 opacity-65 hover:opacity-85 z-10'

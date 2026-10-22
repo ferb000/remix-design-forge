@@ -20,9 +20,15 @@ export function smtpOptions(env=process.env) {
 
 export function confirmation(kind,data) {
   const booking=kind==='bookings';
+  if(data.audience==='admin') {
+    const subject=booking?'New Design Forge consultation':'New Design Forge inquiry';
+    const labels={name:'Name',email:'Email',phone:'Phone',message:'Inquiry',serviceName:'Service',date:'Date',time:'Time',projectName:'Project',firmName:'Firm',notes:'Notes',id:'Reference'};
+    const text=Object.entries(labels).filter(([key])=>data[key]).map(([key,label])=>label+': '+data[key]).join('\n\n');
+    return {subject,text,html:'<div><h1>'+escapeHtml(subject)+'</h1>'+text.split('\n\n').map(line=>'<p>'+escapeHtml(line)+'</p>').join('')+'</div>'};
+  }
   const subject=booking?'Your Design Forge consultation is confirmed':'We received your Design Forge inquiry';
   const lines=booking
-    ? [`Hello ${data.name},`,'Your 30-minute consultation is confirmed.',`Service: ${data.serviceName}`,`Date: ${data.date}`,`Time: ${data.time} (UTC+01:00)`,`Reference: ${data.id}`,'Please reply to this email if you need help with your reservation.']
+    ? [`Hello ${data.name},`,'Your 30-minute consultation is confirmed.',`Service: ${data.serviceName}`,`Date: ${data.date}`,`Time: ${data.time}`,`Reference: ${data.id}`,'Please reply to this email if you need help with your reservation.']
     : [`Hello ${data.name},`,'Thank you for contacting Design Forge. We have received your inquiry and our studio will follow up with you.',`Reference: ${data.id}`,'Please reply to this email if you need to add anything to your inquiry.'];
   return {subject,text:lines.join('\n\n'),html:`<div style="font-family:Arial,sans-serif;line-height:1.6"><h1 style="font-size:22px">${escapeHtml(subject)}</h1>${lines.map(line=>`<p>${escapeHtml(line)}</p>`).join('')}<p>Design Forge Studio</p></div>`};
 }
@@ -35,7 +41,7 @@ export function createMailer(env=process.env,transport) {
   return { enabled:true,
     verify:()=>smtp.verify(),
     async send(job) {
-      const result=await smtp.sendMail({from,to:{address:job.recipient},replyTo:env.SMTP_REPLY_TO || env.SMTP_FROM,
+      const result=await smtp.sendMail({from,to:{address:job.recipient},replyTo:job.payload.audience==='admin' ? job.payload.email : env.SMTP_REPLY_TO || env.SMTP_FROM,
         ...confirmation(job.kind,job.payload),messageId:`<${job.id}@${env.SMTP_FROM.split('@')[1]}>`});
       if (!result.accepted?.length || result.rejected?.length) throw Object.assign(new Error('SMTP recipient was not accepted.'),{code:'ERECIPIENT'});
     },

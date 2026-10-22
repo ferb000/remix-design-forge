@@ -14,7 +14,7 @@ COPY apps/api/src ./apps/api/src
 COPY apps/api/sql ./apps/api/sql
 COPY apps/api/data ./apps/api/data
 COPY apps/web/src/assets/images ./apps/web/src/assets/images
-RUN mkdir -p /app/apps/api/uploads && chown node:node /app/apps/api/uploads
+RUN chmod -R a+rX /app && mkdir -p /app/apps/api/uploads && chown node:node /app/apps/api/uploads
 WORKDIR /app/apps/api
 USER node
 EXPOSE 3002

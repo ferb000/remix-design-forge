@@ -54,4 +54,5 @@ CREATE TABLE IF NOT EXISTS email_outbox (
   last_error text
 );
 CREATE INDEX IF NOT EXISTS email_outbox_pending ON email_outbox(next_attempt_at) WHERE status='pending';
+CREATE TABLE IF NOT EXISTS site_content (key text PRIMARY KEY, value text NOT NULL);
 COMMIT;

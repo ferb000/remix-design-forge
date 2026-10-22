@@ -1,4 +1,4 @@
-export async function saveSubmission(pool,kind,data,mailEnabled) {
+export async function saveSubmission(pool,kind,data,mailEnabled,adminEmail) {
   const client=await pool.connect();
   try {
     await client.query('BEGIN');
@@ -10,6 +10,7 @@ export async function saveSubmission(pool,kind,data,mailEnabled) {
     if(mailEnabled) {
       const payload={id:data.id,name:data.name,...(kind==='bookings'?{serviceName:data.serviceName,date:data.date,time:data.time}:{})};
       await client.query('INSERT INTO email_outbox(id,kind,recipient,payload) VALUES($1,$2,$3,$4)',['confirmation-'+data.id,kind,data.email,payload]);
+      if(adminEmail) await client.query('INSERT INTO email_outbox(id,kind,recipient,payload) VALUES($1,$2,$3,$4)',['notification-'+data.id,kind,adminEmail,{...data,audience:'admin'}]);
     }
     await client.query('COMMIT');
   } catch(error) { await client.query('ROLLBACK'); throw error; }

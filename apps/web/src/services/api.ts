@@ -20,7 +20,7 @@ export const ENDPOINTS = {
   CLIENTS: '/api/clients', CLIENT_BY_ID: (id: string) => '/api/clients/' + encodeURIComponent(id),
   INQUIRIES: '/api/inquiries', BOOKINGS: '/api/bookings', UPLOAD: '/api/upload', HEALTH: '/api/health',
 };
-async function request<T>(endpoint: string, method = 'GET', body?: unknown): Promise<ApiResponse<T>> {
+export async function request<T>(endpoint: string, method = 'GET', body?: unknown): Promise<ApiResponse<T>> {
   const multipart = body instanceof FormData;
   const res = await fetch(getApiBaseUrl() + endpoint, {
     method, credentials: 'include', headers: !multipart ? { 'Content-Type': 'application/json' } : {},

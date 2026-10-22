@@ -29,6 +29,7 @@ export function createApp({
   uploadsDir = path.join(root, "uploads"),
   storage,
   mailEnabled = false,
+  adminNotificationEmail = process.env.ADMIN_EMAIL,
   trustProxy = process.env.TRUST_PROXY_HOPS === '1' ? 1 : 'loopback',
   production = process.env.NODE_ENV === 'production',
   publicUrl = process.env.PUBLIC_API_URL || "http://localhost:3002",
@@ -321,6 +322,19 @@ export function createApp({
       ok(res, present(result.rows[0].data));
     }),
   );
+  app.get('/api/site-content', asyncRoute(async (req,res) => {
+    const result = await pool.query('SELECT key,value FROM site_content');
+    ok(res,Object.fromEntries(result.rows.map(row => [row.key,row.value.startsWith('/') ? publicUrl + row.value : row.value])));
+  }));
+  app.put('/api/site-content/:key', requireAuth, upload.single('image'), asyncRoute(async (req,res) => {
+    if (!/^(aboutPortrait|process(?:Nordic|Tower|Kyoto|Spiral|Interior|Desert|Coastal))$/.test(req.params.key)) throw new ApiError(400,'Unknown content image.');
+    if (!req.file) throw new ApiError(400,'Choose an image.');
+    const stored = await storeFile(req.file);
+    try {
+      await pool.query('INSERT INTO site_content(key,value) VALUES($1,$2) ON CONFLICT(key) DO UPDATE SET value=EXCLUDED.value',[req.params.key,stored]);
+      ok(res,{url:stored.startsWith('/') ? publicUrl + stored : stored});
+    } catch(error) { await files.remove(stored).catch(()=>{}); throw error; }
+  }));
   app.post(
     "/api/upload",
     requireAuth,
@@ -352,7 +366,7 @@ export function createApp({
           data.endsAt = slot.endsAt;
         }
         try {
-          await saveSubmission(pool,table,data,mailEnabled);
+          await saveSubmission(pool,table,data,mailEnabled,adminNotificationEmail);
         } catch (error) {
             if (error.code === "23P01")
               throw new ApiError(
